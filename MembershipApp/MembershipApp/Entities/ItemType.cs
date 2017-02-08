@@ -3,8 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MembershipApp.Entities
 {
-    [Table("Section")]
-    public class Section
+    [Table("ItemType")]
+    public class ItemType
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }

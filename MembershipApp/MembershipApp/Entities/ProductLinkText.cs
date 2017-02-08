@@ -3,13 +3,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MembershipApp.Entities
 {
-    [Table("Section")]
-    public class Section
+    [Table("ProductLinkText")]
+    public class ProductLinkText
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [MaxLength(255)]
+        [MaxLength(25)]
         [Required]
         public string Title { get; set; }
     }
