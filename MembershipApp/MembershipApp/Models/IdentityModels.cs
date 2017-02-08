@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using MembershipApp.Entities;
 
 namespace MembershipApp.Models
 {
@@ -20,6 +21,14 @@ namespace MembershipApp.Models
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
+
+        /// <summary>
+        /// In real world scenario might want to opt to rename the ApplicationDbContext
+        /// or have multiple context responsible for different parts of the database
+        /// such as Identity and Membership.  Since the focus of the tactical guidebook
+        /// and this sample project is geared towards MVC and not the Entity Framework, it 
+        /// will only use the default context.
+        /// </summary>
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
@@ -29,5 +38,7 @@ namespace MembershipApp.Models
         {
             return new ApplicationDbContext();
         }
+
+        public DbSet<Section> Sections { get; set; }
     }
 }
