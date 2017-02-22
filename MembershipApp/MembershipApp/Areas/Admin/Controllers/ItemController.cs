@@ -40,7 +40,15 @@ namespace MembershipApp.Areas.Admin.Controllers
         // GET: Admin/Item/Create
         public ActionResult Create()
         {
-            return View();
+            //  get all of itemtypes, parts, sections in db and adding to ViewModel
+            var model = new Item()
+            {
+                ItemTypes = db.ItemTypes.ToList(),
+                Parts = db.Parts.ToList(),
+                Sections = db.Sections.ToList()
+            };
+
+            return View(model);
         }
 
         // POST: Admin/Item/Create
