@@ -80,6 +80,12 @@ namespace MembershipApp.Areas.Admin.Controllers
             {
                 return HttpNotFound();
             }
+
+            // getting itemtypes, parts and sections data from the database
+            item.ItemTypes = await db.ItemTypes.ToListAsync();
+            item.Parts = await db.Parts.ToListAsync();
+            item.Sections = await db.Sections.ToListAsync();
+
             return View(item);
         }
 
