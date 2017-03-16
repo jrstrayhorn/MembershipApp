@@ -1,4 +1,4 @@
-﻿@model MembershipApp.Entities.Product
+﻿@model MembershipApp.Areas.Admin.Models.ProductModel
 
 @{
     ViewBag.Title = "Details";
@@ -35,29 +35,20 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.ItemTypeId)
+            @Html.DisplayNameFor(model => model.ProductTypes)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.ItemTypeId)
+            @Html.DisplayFor(model => model.ProductType)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.PartId)
+            @Html.DisplayNameFor(model => model.ProductLinkTexts)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.PartId)
+            @Html.DisplayFor(model => model.ProductLinkText)
         </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.SectionId)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.SectionId)
-        </dd>
-
     </dl>
 </div>
 <p>

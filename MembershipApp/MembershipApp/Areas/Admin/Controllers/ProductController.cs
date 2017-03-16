@@ -38,7 +38,11 @@ namespace MembershipApp.Areas.Admin.Controllers
             {
                 return HttpNotFound();
             }
-            return View(product);
+
+            // converting fetched product to a ProductModel
+            var model = await product.Convert(db);
+
+            return View(model);
         }
 
         // GET: Admin/Product/Create
@@ -81,7 +85,10 @@ namespace MembershipApp.Areas.Admin.Controllers
             {
                 return HttpNotFound();
             }
-            return View(product);
+            var prod = new List<Product>();
+            prod.Add(product);
+            var productModel = await prod.Convert(db);
+            return View(productModel.First());
         }
 
         // POST: Admin/Product/Edit/5
@@ -112,7 +119,10 @@ namespace MembershipApp.Areas.Admin.Controllers
             {
                 return HttpNotFound();
             }
-            return View(product);
+            // converting fetched product to a ProductModel
+            var model = await product.Convert(db);
+
+            return View(model);
         }
 
         // POST: Admin/Product/Delete/5
