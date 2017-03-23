@@ -11,6 +11,7 @@ using MembershipApp.Entities;
 using MembershipApp.Models;
 using MembershipApp.Areas.Admin.Extensions;
 using MembershipApp.Areas.Admin.Models;
+using System.Transactions;
 
 namespace MembershipApp.Areas.Admin.Controllers
 {
@@ -131,8 +132,26 @@ namespace MembershipApp.Areas.Admin.Controllers
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             Product product = await db.Products.FindAsync(id);
-            db.Products.Remove(product);
-            await db.SaveChangesAsync();
+            // add a transaction here to ensure that when Product rows are deleted from db
+            // SubscriptionProducts and ProductItems rows are also deleted to eliminate
+            // orphaned records
+            using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            {
+                try
+                {
+                    var prodItems = db.ProductItems.Where(pi => pi.ProductId.Equals(id));
+                    var prodSubscr = db.SubscriptionProducts.Where(sp => sp.ProductId.Equals(id));
+                    db.ProductItems.RemoveRange(prodItems);
+                    db.SubscriptionProducts.RemoveRange(prodSubscr);
+                    db.Products.Remove(product);
+                    await db.SaveChangesAsync();
+                    transaction.Complete();
+                }
+                catch
+                {
+                    transaction.Dispose();
+                } 
+            }
             return RedirectToAction("Index");
         }
 

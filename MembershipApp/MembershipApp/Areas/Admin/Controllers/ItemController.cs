@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using MembershipApp.Entities;
 using MembershipApp.Models;
+using System.Transactions;
 
 namespace MembershipApp.Areas.Admin.Controllers
 {
@@ -126,8 +127,24 @@ namespace MembershipApp.Areas.Admin.Controllers
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             Item item = await db.Items.FindAsync(id);
-            db.Items.Remove(item);
-            await db.SaveChangesAsync();
+            // adding a transaction to ensure that we not only remove item records from
+            // db but alos any entries in ProductItem table for that item so we don't have
+            // orphan ProductItem records
+            using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            {
+                try
+                {
+                    var prodItems = db.ProductItems.Where(pi => pi.ItemId.Equals(id));
+                    db.ProductItems.RemoveRange(prodItems);
+                    db.Items.Remove(item);
+                    await db.SaveChangesAsync();
+                    transaction.Complete();
+                }
+                catch
+                {
+                    transaction.Dispose();
+                } 
+            }
             return RedirectToAction("Index");
         }
 
