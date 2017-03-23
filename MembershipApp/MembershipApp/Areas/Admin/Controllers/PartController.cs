@@ -12,6 +12,7 @@ using MembershipApp.Models;
 
 namespace MembershipApp.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class PartController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
