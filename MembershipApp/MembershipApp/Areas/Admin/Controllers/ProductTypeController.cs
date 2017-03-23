@@ -112,8 +112,13 @@ namespace MembershipApp.Areas.Admin.Controllers
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             ProductType productType = await db.ProductTypes.FindAsync(id);
-            db.ProductTypes.Remove(productType);
-            await db.SaveChangesAsync();
+            // check to see if ProductType is in use before deleting, if so, don't delete
+            var isUnused = await db.Products.CountAsync(i => i.ProductTypeId.Equals(id)) == 0;
+            if (isUnused)
+            {
+                db.ProductTypes.Remove(productType);
+                await db.SaveChangesAsync(); 
+            }
             return RedirectToAction("Index");
         }
 
