@@ -96,6 +96,41 @@ namespace MembershipApp.Areas.Admin.Extensions
             return model;
         }
 
+        public static async Task<List<SubscriptionProductModel>> Convert(this IQueryable<SubscriptionProduct> subscriptionProducts, ApplicationDbContext db)
+        {
+            if (subscriptionProducts.Count().Equals(0))
+            {
+                return new List<SubscriptionProductModel>();
+            }
+
+            var model = await (
+                from pi in subscriptionProducts
+                select new SubscriptionProductModel
+                {
+                    SubscriptionId = pi.SubscriptionId,
+                    ProductId = pi.ProductId,
+                    SubscriptionTitle = db.Subscriptions.FirstOrDefault(i => i.Id.Equals(pi.SubscriptionId)).Title,
+                    ProductTitle = db.Products.FirstOrDefault(p => p.Id.Equals(pi.ProductId)).Title
+                }).ToListAsync();
+
+            return model;
+        }
+
+        public static async Task<SubscriptionProductModel> Convert(this SubscriptionProduct subscriptionProduct, ApplicationDbContext db, bool addListData = true)
+        {
+            var model = new SubscriptionProductModel
+            {
+                SubscriptionId = subscriptionProduct.SubscriptionId,
+                ProductId = subscriptionProduct.ProductId,
+                Subscriptions = addListData ? await db.Subscriptions.ToListAsync() : null,
+                Products = addListData ? await db.Products.ToListAsync() : null,
+                SubscriptionTitle = (await db.Subscriptions.FirstOrDefaultAsync(i => i.Id.Equals(subscriptionProduct.SubscriptionId))).Title,
+                ProductTitle = (await db.Products.FirstOrDefaultAsync(p => p.Id.Equals(subscriptionProduct.ProductId))).Title
+            };
+
+            return model;
+        }
+
         public static async Task<bool> CanChange(this ProductItem productItem, ApplicationDbContext db)
         {
             // purpose of this method is to check that there is an "old" ProductItem in db
@@ -132,6 +167,55 @@ namespace MembershipApp.Areas.Admin.Extensions
 
                         // add the new (changed) ProductItem
                         db.ProductItems.Add(newProductItem);
+
+                        await db.SaveChangesAsync();
+
+                        transaction.Complete();
+                    }
+                    catch
+                    {
+                        transaction.Dispose();
+                    }
+                }
+            }
+        }
+
+        public static async Task<bool> CanChange(this SubscriptionProduct subscriptionProduct, ApplicationDbContext db)
+        {
+            // purpose of this method is to check that there is an "old" SubscriptionProduct in db
+            // based on OldProductID, OldItemId and the "new" SubscriptionProduct based on productId
+            // and itemId doesn't already exist to ensure a proper edit and avoid duplicates
+            var oldPI = await db.SubscriptionProducts.CountAsync(pi => pi.ProductId.Equals(subscriptionProduct.OldProductId) && pi.SubscriptionId.Equals(subscriptionProduct.OldSubscriptionId));
+            var newPI = await db.SubscriptionProducts.CountAsync(pi => pi.ProductId.Equals(subscriptionProduct.ProductId) && pi.SubscriptionId.Equals(subscriptionProduct.SubscriptionId));
+
+            return oldPI.Equals(1) && newPI.Equals(0);
+        }
+
+        public static async Task Change(this SubscriptionProduct subscriptionProduct, ApplicationDbContext db)
+        {
+            // this method performs subscriptionProduct update in database
+            var oldSubscriptionProduct = await db.SubscriptionProducts.FirstOrDefaultAsync(pi => pi.ProductId.Equals(subscriptionProduct.OldProductId) && pi.SubscriptionId.Equals(subscriptionProduct.OldSubscriptionId));
+            var newSubscriptionProduct = await db.SubscriptionProducts.FirstOrDefaultAsync(pi => pi.ProductId.Equals(subscriptionProduct.ProductId) && pi.SubscriptionId.Equals(subscriptionProduct.SubscriptionId));
+
+            if (oldSubscriptionProduct != null && newSubscriptionProduct == null)
+            {
+                newSubscriptionProduct = new SubscriptionProduct
+                {
+                    SubscriptionId = subscriptionProduct.SubscriptionId,
+                    ProductId = subscriptionProduct.ProductId
+                };
+
+                // using a transaction here to ensure that both actions complete
+                // or if one fails then both fail
+                using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                {
+                    try
+                    {
+                        // remove the existing SubscriptionProduct
+                        db.SubscriptionProducts.Remove(oldSubscriptionProduct);
+
+                        // add the new (changed) SubscriptionProduct
+                        db.SubscriptionProducts.Add(newSubscriptionProduct);
 
                         await db.SaveChangesAsync();
 

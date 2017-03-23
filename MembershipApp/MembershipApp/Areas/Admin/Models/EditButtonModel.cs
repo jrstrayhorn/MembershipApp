@@ -26,7 +26,7 @@ namespace MembershipApp.Areas.Admin.Models
                 }
                 if (SubscriptionId > 0)
                 {
-                    s.Append(String.Format("{0}={1}&", "subscriptionId", SubscriptionId));
+                    s.Append(String.Format("{0}={1}&", "id", SubscriptionId));
                 }
 
                 return s.ToString().Substring(0, s.Length - 1);
