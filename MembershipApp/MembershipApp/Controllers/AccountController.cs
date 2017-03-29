@@ -9,6 +9,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using MembershipApp.Models;
+using MembershipApp.Extensions;
+using System.Collections.Generic;
 
 namespace MembershipApp.Controllers
 {
@@ -403,12 +405,22 @@ namespace MembershipApp.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        
+
         //
         // GET: /Account/ExternalLoginFailure
         [AllowAnonymous]
         public ActionResult ExternalLoginFailure()
         {
             return View();
+        }
+
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> Index()
+        {
+            var users = new List<UserViewModel>();
+            await users.GetUsers();
+            return View(users);
         }
 
         protected override void Dispose(bool disposing)
