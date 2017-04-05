@@ -5,15 +5,30 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;    // needed for HttpContext Identity
 using MembershipApp.Extensions;     // needed for custom extension methods
+using System.Threading.Tasks;       // needed for Async Controller Action
+using MembershipApp.Models;
 
 namespace MembershipApp.Controllers
 {
     public class HomeController : Controller
     {
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
             var userId = Request.IsAuthenticated ? HttpContext.User.Identity.GetUserId() : null;
-            return View();
+            var thumbnails = await new List<ThumbnailModel>().GetProductThumbnailsAsync(userId);
+
+            // need to get how many areas are needed
+            var count = thumbnails.Count() / 4;
+            var model = new List<ThumbnailAreaModel>();
+            for (int i = 0; i < count; i++)
+            {
+                model.Add(new ThumbnailAreaModel
+                {
+                    Title = i.Equals(0) ? "My Content" : String.Empty,  // only want to get the heading the first iteration
+                    Thumbnails = thumbnails.Skip(i * 4).Take(4)
+                });
+            }
+            return View(model);
         }
 
         public ActionResult About()
