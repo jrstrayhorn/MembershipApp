@@ -13,7 +13,7 @@
     @Html.Hidden("userId", Model.UserId)
 
     <div class="form-horizontal">
-        <h4>Add Subscription to User</h4>
+        <h4>Add Subscription to User : @Model.UserName</h4>
         <hr />
         @if (Model.DisableDropDown)
         {
@@ -42,7 +42,7 @@
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.Partial("_BackToListButtonPartial")
 </div>
 
 <hr />

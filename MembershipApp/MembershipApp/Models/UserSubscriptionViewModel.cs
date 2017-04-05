@@ -12,6 +12,7 @@ namespace MembershipApp.Models
         public ICollection<UserSubscriptionModel> UserSubscriptions { get; set; }
         public bool DisableDropDown { get; set; }
         public string UserId { get; set; }
+        public string UserName { get; set; }
         public int SubscriptionId { get; set; }
     }
 }
