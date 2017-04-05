@@ -11,6 +11,7 @@ using Microsoft.Owin.Security;
 using MembershipApp.Models;
 using MembershipApp.Extensions;
 using System.Collections.Generic;
+using System.Net;
 
 namespace MembershipApp.Controllers
 {
@@ -421,6 +422,54 @@ namespace MembershipApp.Controllers
             var users = new List<UserViewModel>();
             await users.GetUsers();
             return View(users);
+        }
+
+        [Authorize(Roles = "Admin")]
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> Create(UserViewModel model)
+        {
+            try
+            {
+                if (model == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                if (ModelState.IsValid)
+                {
+                    var user = new ApplicationUser
+                    {
+                        UserName = model.Email,
+                        Email = model.Email,
+                        FirstName = model.FirstName,
+                        IsActive = true,
+                        Registered = DateTime.Now,
+                        EmailConfirmed = true
+                    };
+
+                    // EmailConfirmed = true is a prerequisite for
+                    // sending "Forgot Password" email
+
+                    var result = await UserManager.CreateAsync(user, model.Password);
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("Index", "Account");
+                    }
+
+                    AddErrors(result);
+                }
+            }
+            catch
+            { }
+
+            // if we got this far something faile, re-display the form
+            return View(model);
         }
 
         protected override void Dispose(bool disposing)
