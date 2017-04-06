@@ -1,0 +1,15 @@
+﻿.headline {
+    border-bottom: none;
+    margin-bottom: 10px;
+}
+
+.headline h2, .headline h3, .headline h4 {
+    margin: 0px 0px -2px;
+    border-bottom: 2px solid #72C02C;
+    padding-bottom: 5px;
+    display: inline-block;
+}
+
+.headline h2 {
+    font-size: 22px;
+}
