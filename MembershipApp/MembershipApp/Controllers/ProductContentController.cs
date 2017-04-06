@@ -11,7 +11,7 @@ namespace MembershipApp.Controllers
     public class ProductContentController : Controller
     {
         // GET: ProductContent
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(int id)
         {
             return View();
         }
