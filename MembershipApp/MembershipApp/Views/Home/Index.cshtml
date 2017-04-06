@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<MembershipApp.Models.ThumbnailAreaModel>
-    @using MembershipApp.Models
+@using MembershipApp.Models
 @{
     ViewBag.Title = "Home Page";
 }
@@ -8,7 +8,10 @@
     @if (User.Identity.IsAuthenticated)
     {
         // displayed if the user is logged in
-        @Html.Partial("_ThumbnailAreaPartial", new ThumbnailAreaModel())
+        foreach (var area in Model)
+        {
+            @Html.Partial("_ThumbnailAreaPartial", area)
+        }
     }
     else
     {
