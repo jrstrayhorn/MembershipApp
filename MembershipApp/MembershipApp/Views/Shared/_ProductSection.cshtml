@@ -13,10 +13,12 @@
         </div>
         <div class="panel-collapse collapse in" style="" id="collapse@{@s.Id}">
             <div class="panel-body">
-
+                @foreach (var item in s.Items)
+                {
+                    @Html.Partial("_ProductItemRow", item)
+                }
             </div>
         </div>
     </div>
     <br />
-}
-
+    }
