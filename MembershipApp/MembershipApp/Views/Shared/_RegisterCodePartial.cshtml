@@ -1,0 +1,17 @@
+﻿@if (Request.IsAuthenticated)
+{
+    <div class="panel panel-primary register-code-panel">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                Register Code
+            </h4>
+        </div>
+        <div class="panel-body input-group">
+            <input type="text" placeholder="Enter Code Here" class="form-control" />
+            <button class="btn btn-primary input-group-btn" type="button">Submit</button>
+        </div>
+        <div class="alert alert-danger hidden">
+            Could not register code
+        </div>
+    </div>
+}
