@@ -32,7 +32,8 @@ namespace MembershipApp
 
             bundles.Add(new ScriptBundle("~/bundles/membership").Include(
                       "~/Scripts/carret.js",
-                      "~/Scripts/JWPlayer.js"));
+                      "~/Scripts/JWPlayer.js",
+                      "~/Scripts/RegisterCode.js"));
 
             bundles.Add(new StyleBundle("~/Content/membership").Include(
                       "~/Content/navbar.css",
