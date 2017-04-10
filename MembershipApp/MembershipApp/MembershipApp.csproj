@@ -231,6 +231,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\carret.css" />
+    <Content Include="Content\html.css" />
     <Content Include="Content\Images\csharp-for-beginners.png" />
     <Content Include="Content\Images\csharp-zip.png" />
     <Content Include="Content\Images\laptop.jpg" />
@@ -366,6 +367,7 @@
     <Content Include="Views\ProductContent\Index.cshtml" />
     <Content Include="Views\Shared\_ProductSection.cshtml" />
     <Content Include="Views\Shared\_ProductItemRow.cshtml" />
+    <Content Include="Views\ProductContent\Content.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
