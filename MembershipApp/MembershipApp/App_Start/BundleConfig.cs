@@ -40,7 +40,8 @@ namespace MembershipApp
                       "~/Content/thumbnails.css",
                       "~/Content/ProductContent.css",
                       "~/Content/carret.css",
-                      "~/Content/html.css"));
+                      "~/Content/html.css",
+                      "~/Content/RegisterCode.css"));
 
 
         }

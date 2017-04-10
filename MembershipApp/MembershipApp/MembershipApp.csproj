@@ -221,6 +221,7 @@
     <Compile Include="Models\ProductItemRow.cs" />
     <Compile Include="Models\ProductSection.cs" />
     <Compile Include="Models\ProductSectionModel.cs" />
+    <Compile Include="Models\RegisterUserModel.cs" />
     <Compile Include="Models\ThumbnailAreaModel.cs" />
     <Compile Include="Models\ThumbnailModel.cs" />
     <Compile Include="Models\UserSubscriptionModel.cs" />
@@ -373,6 +374,7 @@
     <Content Include="Views\Shared\_ProductItemRow.cshtml" />
     <Content Include="Views\ProductContent\Content.cshtml" />
     <Content Include="Views\Shared\_RegisterCodePartial.cshtml" />
+    <Content Include="Views\Shared\_RegisterUserPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
