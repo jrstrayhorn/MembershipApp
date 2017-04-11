@@ -721,6 +721,58 @@ namespace MembershipApp.Controllers
             base.Dispose(disposing);
         }
 
+        #region Register User
+
+        private void AddUserErrors(IdentityResult result)
+        {
+            foreach (var error in result.Errors)
+            {
+                if (error.StartsWith("Name") && error.EndsWith("is already taken."))
+                {
+                    continue;
+                }
+                ModelState.AddModelError("", error);
+            }
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> RegisterUserAsync(RegisterUserModel model)
+        {
+            model.AcceptUserAgreement = true;
+
+            if (ModelState.IsValid)
+            {
+                var user = new ApplicationUser
+                {
+                    UserName = model.Email,
+                    Email = model.Email,
+                    FirstName = model.Name,
+                    IsActive = true,
+                    Registered = DateTime.Now,
+                    EmailConfirmed = true
+                };
+                var result = await UserManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
+                {
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
+                    // Add a default subscription called "Free" to all users.
+                    await SubscriptionExtensions.RegisterUserSubscriptionCode("Free", user.Id);
+
+                    return PartialView("_RegisterUserPartial", model);
+                }
+
+                AddUserErrors(result);
+            }
+
+            // If we got this far, something failed, redisplay form
+            return PartialView("_RegisterUserPartial", model);
+        }
+
+        #endregion
+
         #region Helpers
         // Used for XSRF protection when adding external logins
         private const string XsrfKey = "XsrfId";
