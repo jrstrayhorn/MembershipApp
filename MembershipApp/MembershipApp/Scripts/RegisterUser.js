@@ -16,7 +16,7 @@
         var email = $('.register-user-panel .email').val();
         var pwd = $('.register-user-panel .password').val();
 
-        $.post(url, { __RequestVerificationToken: antiforegry, email: email, name: name, password: pwd, acceptUserAgreement: ture },
+        $.post(url, { __RequestVerificationToken: antiforegry, email: email, name: name, password: pwd, acceptUserAgreement: true },
             function (data) {
                 var parsed = $.parseHTML(data);
                 hasErrors = $(parsed).find("[data-valmsg-summary]").text().replace(/\n|\r/g, "").length > 0;
