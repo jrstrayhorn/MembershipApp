@@ -1,0 +1,16 @@
+﻿a[data-logout-button] {
+    color: white;
+}
+
+.nav > li > a[data-logout-button]:hover {
+    color: white;
+    background-color:orangered;
+    border-color:orangered;
+}
+
+[data-login-user-area].open {
+    display:block;
+    padding-top: 0px;
+    padding-bottom: 3px;
+    margin-right: 10px;
+}
