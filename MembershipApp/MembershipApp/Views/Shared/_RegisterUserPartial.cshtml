@@ -8,7 +8,47 @@
             </h4>
         </div>
         <div class="panel-body">
-            Panel Content
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(false, "", new { @style = "" })
+
+            <div class="input-group input-group-sm">
+                <span class="input-group-addon glyphicon glyphicon-user"></span>
+                @Html.TextBoxFor(m => m.Name, new
+           {
+               @class = "form-control first-name",
+               @placeholder = "First Name"
+           })
+            </div>
+
+            <div class="input-group input-group-sm">
+                <span class="input-group-addon glyphicon glyphicon-envelope"></span>
+                @Html.TextBoxFor(m => m.Email, new
+           {
+               @class = "form-control email",
+               @placeholder = "Email"
+           })
+            </div>
+
+            <div class="input-group input-group-sm">
+                <span class="input-group-addon glyphicon glyphicon-lock"></span>
+                @Html.PasswordFor(m => m.Password, new
+           {
+               @class = "form-control password",
+               @placeholder = "Password"
+           })
+            </div>
+
+            <div class="register-checkbox">
+                @Html.CheckBoxFor(m => m.AcceptUserAgreement, new
+           {
+                @data_register_user_agreement_click = ""
+           })
+                <span>I Accept the @Html.ActionLink("Terms of use", "TermsOfUse", "Legal")</span>
+            </div>
+
+            <button class="pull-right btn btn-success disabled" type="button">
+                Sign me up!
+            </button>
         </div>
     </div>
 </div>
